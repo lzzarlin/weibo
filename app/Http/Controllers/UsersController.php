@@ -11,7 +11,7 @@ class UsersController extends Controller
     public function __construct()
     {
         $this->middleware('auth', [
-            'except' => ['show', 'create', 'store']
+            'except' => ['show', 'create', 'store', 'index']
         ]);
         $this->middleware('guest', [
             'only' => ['create']
@@ -55,7 +55,7 @@ class UsersController extends Controller
 
         $this->validate($request, [
             'name' => 'required|max:50',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'nullable|confirmed|min:6',
         ]);
         $data = [];
         $data['name'] = $request->name;
@@ -68,5 +68,11 @@ class UsersController extends Controller
         session()->flash('success', '个人资料更新成功');
 
         return redirect()->route('users.show', $user->id);
+    }
+
+    public function index()
+    {
+        $users = User::paginate(5);
+        return view('users.index', compact('users'));
     }
 }
