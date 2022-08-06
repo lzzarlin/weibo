@@ -12,6 +12,13 @@ use Illuminate\Support\Str;
 
 class PasswordController extends Controller
 {
+    // 访问限流
+    public function __construct()
+    {
+        $this->middleware('throttle:2,1', [
+            'only' => ['showLinkRequestForm']
+        ]);
+    }
     // 申请重置密码页面
     public function showLinkRequestForm()
     {
